@@ -43,9 +43,6 @@ def visualize_results(player_wins, players_list, rock_wins, paper_wins, scissors
     players = list(player_wins.keys())
     wins = list(player_wins.values())
 
-    for player, win in zip(players, wins):
-        print(f"Player {player}: {win} wins")
-
     plt.bar(players, wins)
     plt.xlabel('Players')
     plt.ylabel('Number of Wins')

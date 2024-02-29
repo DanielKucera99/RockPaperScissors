@@ -125,32 +125,34 @@ class NetworkGame:
         scissors_wins = 0
 
         player_wins = {player.name: 0 for player in self.players}
+        for simulations in range(10000):
+            for i, player1 in enumerate(self.players):
+                for j, player2 in enumerate(self.players):
+                    if i < j:
+                        move1 = player1.strategy.move()
+                        move2 = player2.strategy.move()
+                        result = self.play_round(player1, player2, move1, move2, rock_wins, paper_wins, scissors_wins)
+                        results.append((player1.name, player2.name, result))
 
-        for i, player1 in enumerate(self.players):
-            for j, player2 in enumerate(self.players):
-                if i < j:
-                    move1 = player1.strategy.move()
-                    move2 = player2.strategy.move()
-                    result = self.play_round(player1, player2, move1, move2, rock_wins, paper_wins, scissors_wins)
-                    results.append((player1.name, player2.name, result))
+                        self.count_the_most_used_move(player1, move1)
+                        self.count_the_most_used_move(player2, move2)
 
-                    self.count_the_most_used_move(player1, move1)
-                    self.count_the_most_used_move(player2, move2)
+                        if "wins" in result:
+                            if player1.name in result:
+                                player_wins[player1.name] += 1
+                                winning_move = move1
+                            else:
+                                winning_move = move2
+                                player_wins[player2.name] += 1
 
-                    if "wins" in result:
-                        if player1.name in result:
-                            player_wins[player1.name] += 1
-                            winning_move = move1
-                        else:
-                            winning_move = move2
-                            player_wins[player2.name] += 1
+                            if winning_move == 'rock':
+                                rock_wins += 1
+                            elif winning_move == 'paper':
+                                paper_wins += 1
+                            elif winning_move == 'scissors':
+                                scissors_wins += 1
 
-                        if winning_move == 'rock':
-                            rock_wins += 1
-                        elif winning_move == 'paper':
-                            paper_wins += 1
-                        elif winning_move == 'scissors':
-                            scissors_wins += 1
+                simulations = simulations + 1
 
         return player_wins, rock_wins, paper_wins, scissors_wins
 
